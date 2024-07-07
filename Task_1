@@ -1,0 +1,123 @@
+"""
+Student Exam Results Analysis
+
+Objective:
+This project aims to analyze and visualize the exam results of students to gain insights into their performance across different subjects. The analysis includes basic data exploration, missing value identification, score distribution visualizations, and correlation analysis.
+
+Dataset:
+The dataset, 'results.csv', contains exam scores of students in various subjects along with their total scores, results, and divisions.
+
+Steps and Functions:
+1. load_data(file_path): Load the CSV file into a pandas DataFrame.
+2. basic_info(df): Print the first 5 rows, dataset information, and summary statistics.
+3. missing_values(df): Check for missing values in each column.
+4. visualize_subject_scores(df): Visualize score distributions for each subject using histograms with KDE plots.
+5. visualize_total_distribution(df): Visualize the distribution of total scores.
+6. visualize_results(df): Visualize the distribution of exam results.
+7. visualize_divisions(df): Visualize the distribution of divisions.
+8. correlation_heatmap(df): Display a heatmap of the correlation matrix.
+9. scatter_plot(df): Create a scatter plot to visualize the relationship between total scores and results.
+
+Main Execution:
+The script coordinates the execution of the above functions, loads the data, prints basic information, checks for missing values, and generates visualizations. Exception handling is included to manage potential errors.
+
+Usage:
+Run the script to perform the analysis and generate visualizations.
+Command: python script_name.py (assuming the script is saved as script_name.py)
+"""
+
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+def load_data(file_path):
+    return pd.read_csv(file_path)
+
+def basic_info(df):
+    print("First 5 rows of the dataset:")
+    print(df.head())
+    print("\nDataset info:")
+    print(df.info())
+    print("\nSummary statistics:")
+    print(df.describe())
+
+def missing_values(df):
+    print("\nMissing values in each column:")
+    print(df.isnull().sum())
+
+def visualize_subject_scores(df):
+    subjects = ['Hindi', 'English', 'Science', 'Maths', 'History', 'Geograpgy']
+    for subject in subjects:
+        plt.figure(figsize=(10, 6))
+        sns.histplot(df[subject].dropna(), bins=30, kde=True)
+        plt.title(f'{subject} Score Distribution')
+        plt.xlabel(subject)
+        plt.ylabel('Count')
+        plt.show()
+
+def visualize_total_distribution(df):
+    plt.figure(figsize=(10, 6))
+    sns.histplot(df['Total'], bins=30, kde=True, color='green')
+    plt.title('Total Score Distribution')
+    plt.xlabel('Total Score')
+    plt.ylabel('Count')
+    plt.show()
+
+def visualize_results(df):
+    plt.figure(figsize=(6, 4))
+    sns.countplot(x='Results', data=df, palette='viridis')
+    plt.title('Results Distribution')
+    plt.xlabel('Results')
+    plt.ylabel('Count')
+    plt.show()
+
+def visualize_divisions(df):
+    plt.figure(figsize=(6, 4))
+    sns.countplot(x='Div', data=df, palette='viridis')
+    plt.title('Division Distribution')
+    plt.xlabel('Division')
+    plt.ylabel('Count')
+    plt.show()
+
+def correlation_heatmap(df):
+    plt.figure(figsize=(12, 8))
+    correlation_matrix = df.corr()
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
+    plt.title('Correlation Heatmap')
+    plt.show()
+
+def scatter_plot(df):
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(x='Total', y='Results', data=df, palette='viridis')
+    plt.title('Total vs. Results Scatter Plot')
+    plt.xlabel('Total')
+    plt.ylabel('Results')
+    plt.show()
+
+def main():
+    file_path = 'results.csv'
+    try:
+        df = load_data(file_path)
+        print(f"Columns in the dataset: {df.columns.tolist()}")
+        
+        # Basic info
+        basic_info(df)
+        
+        # Missing values
+        missing_values(df)
+        
+        # Visualizations
+        visualize_subject_scores(df)
+        visualize_total_distribution(df)
+        visualize_results(df)
+        visualize_divisions(df)
+        correlation_heatmap(df)
+        scatter_plot(df)
+    except ValueError as e:
+        print(f"ValueError: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    main()
